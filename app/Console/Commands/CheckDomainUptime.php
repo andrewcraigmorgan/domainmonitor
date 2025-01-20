@@ -28,7 +28,7 @@ class CheckDomainUptime extends Command
             $domain->save();
 
             if (!$domain->is_up) {
-                Mail::to('admin@example.com')->send(new DomainDownNotification($domain));
+                Mail::to($domain->user->email)->send(new DomainDownNotification($domain));
             }
         }
 

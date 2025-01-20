@@ -9,5 +9,10 @@ class Domain extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['url', 'is_up'];
+    protected $fillable = ['url', 'is_up', 'user_id'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
