@@ -1,50 +1,46 @@
 <template>
-    <div class="container mx-auto py-8">
-        <h1 class="text-2xl font-bold mb-6">Domain Monitor</h1>
+    <div class="domain-monitor-container">
+        <h1 class="domain-monitor-title">Domain Monitor</h1>
 
-        <!-- Add Domain Form -->
-        <form @submit.prevent="submitForm" class="mb-6">
+        <form @submit.prevent="submitForm" class="domain-form">
             <input
                 v-model="form.url"
                 type="url"
                 placeholder="https://example.com"
                 required
-                class="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-md"
+                class="domain-input"
             />
             <button
                 type="submit"
-                class="ml-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                class="domain-submit-button"
             >
                 Add Domain
             </button>
         </form>
 
-        <!-- Domains Table -->
-        <div v-if="domains.length > 0" class="overflow-x-auto">
-            <table
-                class="table-auto w-full border-collapse border border-gray-200"
-            >
+        <div v-if="domains.length > 0" class="domain-table-wrapper">
+            <table class="domain-table">
                 <thead>
-                    <tr class="bg-gray-50">
-                        <th class="px-4 py-2 border border-gray-200">Domain</th>
-                        <th class="px-4 py-2 border border-gray-200">Status</th>
+                    <tr class="domain-table-header">
+                        <th class="domain-table-cell">Domain</th>
+                        <th class="domain-table-cell">Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr
                         v-for="domain in domains"
                         :key="domain.id"
-                        :class="domain.is_up ? 'bg-green-50' : 'bg-red-50'"
+                        :class="domain.is_up ? 'domain-row-up' : 'domain-row-down'"
                     >
-                        <td class="px-4 py-2 border border-gray-200">
+                        <td class="domain-table-cell">
                             {{ domain.url }}
                         </td>
-                        <td class="px-4 py-2 border border-gray-200">
+                        <td class="domain-table-cell">
                             <span
                                 :class="
-                                    domain.is_up ? 'bg-green-500' : 'bg-red-500'
+                                    domain.is_up ? 'domain-status-up' : 'domain-status-down'
                                 "
-                                class="text-white px-2 py-1 rounded-lg"
+                                class="domain-status-label"
                             >
                                 {{ domain.is_up ? "Up" : "Down" }}
                             </span>
@@ -60,9 +56,11 @@
 <script>
 import { ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
+import AppLayout from "../../Layouts/AppLayout.vue";
 
 export default {
     props: {
+        auth: Object, // Shared auth data passed from Laravel middleware
         domains: Array,
     },
     setup() {
@@ -78,5 +76,89 @@ export default {
 
         return { form, submitForm };
     },
+    layout: AppLayout,
 };
 </script>
+
+<style lang="less">
+.domain-monitor-container {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.domain-monitor-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.domain-form {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.domain-input {
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    max-width: 28rem;
+}
+
+.domain-submit-button {
+    margin-left: 1rem;
+    padding: 0.5rem 1.5rem;
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #2563eb;
+    }
+}
+
+.domain-table-wrapper {
+    overflow-x: auto;
+}
+
+.domain-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #e5e7eb;
+}
+
+.domain-table-header {
+    background-color: #f9fafb;
+}
+
+.domain-table-cell {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e5e7eb;
+}
+
+.domain-row-up {
+    background-color: #d1fae5;
+}
+
+.domain-row-down {
+    background-color: #fee2e2;
+}
+
+.domain-status-label {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    color: white;
+}
+
+.domain-status-up {
+    background-color: #10b981;
+}
+
+.domain-status-down {
+    background-color: #ef4444;
+}
+</style>

@@ -5,7 +5,7 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
-import { Link } from '@inertiajs/vue3';
+import AppLayout from './Layouts/AppLayout.vue';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -15,15 +15,16 @@ createInertiaApp({
         resolvePageComponent(
             `./Pages/${name}.vue`,
             import.meta.glob('./Pages/**/*.vue'),
-        ),
+        ).then((page) => {
+            // Set the default layout if none is specified
+            page.default.layout = page.default.layout || AppLayout;
+            return page;
+        }),
     setup({ el, App, props, plugin }) {
-        const app = createApp({ render: () => h(App, props) })
+        return createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(ZiggyVue);
-
-        app.component('Link', Link);
-
-        app.mount(el);
+            .use(ZiggyVue)
+            .mount(el);
     },
     progress: {
         color: '#4B5563',

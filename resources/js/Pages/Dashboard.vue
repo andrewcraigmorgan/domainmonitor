@@ -1,21 +1,40 @@
 <template>
-    <div class="container mx-auto py-8">
-        <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
-        <p>Welcome, {{ auth.user.name }}!</p>
-
-        <Link
-            :href="route('domains.index')"
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-            Manage Domains
-        </Link>
+    <div class="dashboard-container">
+        <h1 class="dashboard-title">Dashboard</h1>
+        <p class="dashboard-welcome">Welcome, {{ auth.user.name }}!</p>
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        auth: Object,
-    },
-};
+<script setup>
+import { usePage } from "@inertiajs/vue3";
+import AppLayout from "../Layouts/AppLayout.vue";
+
+// Get the shared `auth` data from Inertia
+const {
+    props: { auth },
+} = usePage();
+
+// Apply the layout
+defineProps({
+    layout: { type: Object, default: () => AppLayout },
+});
 </script>
+
+<style lang="less">
+.dashboard-container {
+    padding: 2rem 0;
+    max-width: 1024px;
+    margin: 0 auto;
+
+    .dashboard-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+    }
+
+    .dashboard-welcome {
+        font-size: 1rem;
+        margin-top: 0;
+    }
+}
+</style>
