@@ -1,70 +1,60 @@
 <template>
     <div class="layout-container">
-        <!-- Header -->
         <header class="header">
             <nav class="nav">
                 <div class="nav-links">
                     <Link href="/" class="link">Home</Link>
-                    <Link :href="route('domains.index')" class="link"
-                        >Manage Domains</Link
-                    >
+                    <Link :href="route('domains.index')" class="link">Manage Domains</Link>
                 </div>
                 <div class="auth-controls">
-                    <span class="user-name" v-if="auth?.user?.name"
-                        >Hello {{ auth?.user?.name }}!</span
-                    >
+                    <span class="user-name" v-if="auth?.user?.name">Hello {{ auth?.user?.name }}!</span>
                     <form @submit.prevent="handleLogout" class="logout-form">
-                        <button type="submit" class="logout-button">
-                            Logout
-                        </button>
+                        <button type="submit" class="logout-button">Logout</button>
                     </form>
                 </div>
             </nav>
         </header>
 
-        <!-- Main Content -->
         <main class="main-content">
             <slot />
         </main>
     </div>
 </template>
 
-<script>
+<script setup>
 import { Link, usePage } from "@inertiajs/vue3";
+import { ref, watch } from "vue";
 
-export default {
-    props: {
-        auth: Object, // Auth data passed from Laravel middleware
-    },
-    components: {
-        Link,
-    },
-    setup() {
-        const { props } = usePage();
-        const csrfToken = props.csrf_token;
+const { props } = usePage();
 
-        const handleLogout = async () => {
-            try {
-                const response = await fetch("/logout", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": csrfToken,
-                    },
-                });
+const csrfToken = ref(props.csrf_token);
+const auth = ref(props.auth);
 
-                if (response.ok) {
-                    window.location.href = "/"; // Redirect login page
-                } else {
-                    console.error("Logout failed.");
-                }
-            } catch (error) {
-                console.error("An error occurred during logout:", error);
-            }
-        };
+watch(
+    () => props.csrf_token,
+    (newToken) => {
+        csrfToken.value = newToken;
+    }
+);
 
-        return { csrfToken, handleLogout };
-    },
+const handleLogout = async () => {
+    try {
+        const response = await fetch("/logout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken.value,
+            },
+        });
+
+        if (response.ok) {
+            window.location.href = "/"; // Redirect to login page
+        } else {
+            console.error("Logout failed.");
+        }
+    } catch (error) {
+        console.error("An error occurred during logout:", error);
+    }
 };
 </script>
 
