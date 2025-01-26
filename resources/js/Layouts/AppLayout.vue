@@ -22,39 +22,34 @@
 </template>
 
 <script setup>
-import { Link, usePage } from "@inertiajs/vue3";
+import { Link, router, usePage } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
 
 const { props } = usePage();
 
-const csrfToken = ref(props.csrf_token);
 const auth = ref(props.auth);
 
 watch(
-    () => props.csrf_token,
-    (newToken) => {
-        csrfToken.value = newToken;
+    () => props.auth,
+    (newAuth) => {
+        auth.value = newAuth;
     }
 );
 
-const handleLogout = async () => {
-    try {
-        const response = await fetch("/logout", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": csrfToken.value,
+const handleLogout = () => {
+    router.post(
+        "/logout",
+        {},
+        {
+            preserveState: false,
+            onFinish: () => {
+                window.location.href = "/";
             },
-        });
-
-        if (response.ok) {
-            window.location.href = "/"; // Redirect to login page
-        } else {
-            console.error("Logout failed.");
+            onError: (error) => {
+                console.error("An error occurred during logout:", error);
+            },
         }
-    } catch (error) {
-        console.error("An error occurred during logout:", error);
-    }
+    );
 };
 </script>
 
