@@ -54,7 +54,7 @@ export default {
                 });
 
                 if (response.ok) {
-                    window.location.href = "/"; // Redirect to home or login page
+                    window.location.href = "/"; // Redirect login page
                 } else {
                     console.error("Logout failed.");
                 }
