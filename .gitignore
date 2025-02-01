@@ -1,24 +1,44 @@
-/.phpunit.cache
+### Laravel ###
+/vendor
 /node_modules
 /public/build
 /public/hot
 /public/storage
 /storage/*.key
 /storage/pail
-/vendor
+/bootstrap/cache/*
+
+### Laravel Environment ###
 .env
-.env.backup
-.env.production
-.phpactor.json
+.env.*
+!.env.example
 .phpunit.result.cache
+.phpunit.cache
+
+### Vercel ###
+.vercel
+/output # If Vercel generates an output directory
+/api/_vercel # Any runtime-related files
+/api/vendor # Avoid unnecessary vendor duplication
+
+### IDE & Editor ###
+/.idea
+/.vscode
+/.nova
+/.fleet
+/.zed
+
+### PHPUnit & PHPStorm ###
+/.phpactor.json
+.phpunit.result.cache
+
+### Homestead & Valet ###
 Homestead.json
 Homestead.yaml
+
+### Authentication Keys ###
 auth.json
+
+### Logs & Debug ###
 npm-debug.log
 yarn-error.log
-/.fleet
-/.idea
-/.nova
-/.vscode
-/.zed
-.vercel
