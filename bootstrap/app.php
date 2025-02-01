@@ -15,9 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
-
-        //
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create()
+    ->tap(function ($app) {
+        // Force Laravel to use /tmp
+        $app->useStoragePath('/tmp');
+        putenv('VIEW_COMPILED_PATH=/tmp');
+        config(['view.compiled' => '/tmp']);
+    });
