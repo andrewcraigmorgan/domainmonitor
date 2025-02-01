@@ -1,8 +1,11 @@
 <?php
 
-// Correct the Laravel bootstrap path
-require __DIR__ . '/../bootstrap/app.php';
+define('LARAVEL_START', microtime(true));
 
+// Load Composer dependencies
+require __DIR__ . '/../vendor/autoload.php';
+
+// Bootstrap Laravel
 $app = require_once __DIR__ . '/../bootstrap/app.php';
 
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
