@@ -42,3 +42,4 @@ auth.json
 ### Logs & Debug ###
 npm-debug.log
 yarn-error.log
+/vendor
